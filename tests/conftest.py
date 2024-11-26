@@ -1,13 +1,24 @@
 """
 This module contains shared fixtures.
 """
-
+import json
 import pytest
 import selenium.webdriver
 
 @pytest.fixture
-def browser():
+def config(scope='session'):
 
+    # Read the file
+    with open('config.json') as config_file:
+        config = json.load(config_file)
+
+    # Assert values are acceptable
+    assert config['browser'] in ['Firefox' , 'Chrome', 'Headless Chrome']
+    assert isinstance(config['implicit_wait'], int)
+    assert config['implicit_wait'] > 0
+
+    return config    
+    
     # Initialize the ChromeDrive instance
     b = selenium.webdriver.Chrome()
 
