@@ -17,16 +17,28 @@ def config(scope='session'):
     assert isinstance(config['implicit_wait'], int)
     assert config['implicit_wait'] > 0
 
+    #return config so it can be used
     return config    
     
-    # Initialize the ChromeDrive instance
-    b = selenium.webdriver.Chrome()
+    @pytest.fixture
+    def browser(config):
+        # Initialize  the WebDrive instance
+        if config['browser'] == 'Firefox':
+            b = selenium.webdriver.Firefox()
+        elif config['browser'] == 'Chrome':
+            b = selenium.webdriver.Chrome()
+        elif config['browser'] == 'headless Chrome':
+            opts = selenium.webdriver.ChromeOptions()
+            opts.add_arguments('Headless')
+            b = selenium.webdriver.Chrome(options=opts)
+        else:
+            raise Exception(f'Browser "{config["browser"]}" is not supported')
 
-    # Make its calls wait up to 10 seconds for elements to appear
-    b.implicitly_wait(10)
+        # Make its calls wait for elements to apper
+        b.implicitly_wait(config['implicit_wait'])
 
-    # Return the WebDriver instance for the setup
-    yield b
+        # Return the webdrive  instance for the setup
+        yield b
 
-    # Quit the WebDriver instance for the cleanup
-    b.quit()
+        # Quit the webdrive instance for the cleanup
+        b.quit()       
