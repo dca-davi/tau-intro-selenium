@@ -22,14 +22,15 @@ def config(scope='session'):
     
     @pytest.fixture
     def browser(config):
+        
         # Initialize  the WebDrive instance
         if config['browser'] == 'Firefox':
             b = selenium.webdriver.Firefox()
         elif config['browser'] == 'Chrome':
             b = selenium.webdriver.Chrome()
-        elif config['browser'] == 'headless Chrome':
+        elif config['browser'] == 'Headless Chrome':
             opts = selenium.webdriver.ChromeOptions()
-            opts.add_arguments('Headless')
+            opts.add_argument('headless')
             b = selenium.webdriver.Chrome(options=opts)
         else:
             raise Exception(f'Browser "{config["browser"]}" is not supported')
